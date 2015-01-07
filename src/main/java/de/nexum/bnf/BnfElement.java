@@ -73,6 +73,7 @@ public class BnfElement {
 					break;
 				case QUANTIFIER_ONCE_OR_NOT_AT_ALL:
 					buf.append("[").append(currentElement.content).append("]");
+					break;
 				case QUANTIFIER_ZERO_OR_MORE_TIMES:
 					buf.append("{").append(currentElement.content).append("}");
 					break;
