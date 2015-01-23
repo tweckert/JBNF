@@ -1,6 +1,6 @@
 package de.nexum.bnf;
 
-import de.nexum.bnf.util.CharacterUtils;
+import de.nexum.util.CharacterUtils;
 
 /**
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
@@ -18,6 +18,7 @@ public class BnfGrammarParser {
 	public BnfGrammarParser(CharSequence bnfGrammarText) {
 		
 		super();		
+		this.pos = 0;
 		this.bnfGrammarText = bnfGrammarText;
 	}
 	
@@ -71,7 +72,7 @@ public class BnfGrammarParser {
 			}
 			
 			currentElement.setNext(null);
-			currentElement.setLink(BnfElementLink.NONE);
+			currentElement.setLink(BnfElementLink.DEFAULT);
 			
 			switch (nextCharacter()) {
 				case '(':
