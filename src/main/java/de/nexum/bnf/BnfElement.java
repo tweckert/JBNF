@@ -3,7 +3,7 @@ package de.nexum.bnf;
 /**
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
  */
-public class BnfElement {
+public class BnfElement implements Cloneable {
 
 	private BnfElementType type;
 	private BnfElementLink link;
@@ -11,6 +11,22 @@ public class BnfElement {
 	private String symbol;
 	private BnfElement content;
 	private BnfElement next;
+	
+	public BnfElement() {
+		super();
+	}
+	
+	private BnfElement(BnfElement bnfElement) {
+		
+		super();
+		
+		this.type = bnfElement.type;
+		this.link = bnfElement.link;
+		this.terminal = bnfElement.terminal;
+		this.symbol = bnfElement.symbol;
+		this.content = bnfElement.content;
+		this.next = bnfElement.next;				
+	}
 	
 	public BnfElementType getType() {
 		return type;
@@ -91,6 +107,11 @@ public class BnfElement {
 		}
 		
 		return buf.toString();
+	}
+	
+	@Override
+	public BnfElement clone() {
+	    return new BnfElement(this);
 	}
 	
 }
