@@ -1,4 +1,4 @@
-package de.nexum.bnf.util;
+package de.nexum.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package de.nexum.bnf.util;
+package de.nexum.util;
 
 /**
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
