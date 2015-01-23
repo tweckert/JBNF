@@ -5,7 +5,7 @@ package de.nexum.bnf;
  */
 public enum BnfElementLink {
 
-	NONE,
+	DEFAULT,
 	OR
 	
 }

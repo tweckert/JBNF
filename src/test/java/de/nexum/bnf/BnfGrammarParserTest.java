@@ -7,12 +7,12 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.nexum.bnf.util.FileIO;
+import de.nexum.util.FileIO;
 
 /**
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
  */
-public class BnfParserTest {
+public class BnfGrammarParserTest {
 	
 	private CharSequence bnfGrammarText;
 	
