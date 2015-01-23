@@ -1,64 +1,77 @@
 package de.nexum.bnf;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.nexum.util.Position;
+
 /**
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
  */
 public class BnfSyntaxValidator {
 	
-	private int pos;
-	
 	public BnfSyntaxValidator() {
 		
 		super();
-		this.pos = 0;
 	}
 
 	public boolean checkSyntax(String inputString, BnfRule firstBnfRule) throws BnfSyntaxValidationException {
-		pos = 0;
-		return checkSyntax(inputString, firstBnfRule.getFirstRuleElement(), new StringBuffer(), firstBnfRule);
+		return checkSyntax(new Position(), new Position(), inputString, firstBnfRule.getFirstRuleElement(), firstBnfRule, new ArrayList<String>());
 	}
 	
-	private boolean checkSyntax(String inputString, BnfElement startBnfElement, StringBuffer writeBuffer, BnfRule currentBnfRule) throws BnfSyntaxValidationException {
+	private boolean checkSyntax(Position startPosition, Position endPosition, String inputString, BnfElement startBnfElement, BnfRule currentBnfRule, List<String> values) throws BnfSyntaxValidationException {
+		
+		Position tmpPosition = new Position(startPosition);
 		
 		for (BnfElement currentBnfElement = startBnfElement; currentBnfElement != null; currentBnfElement = currentBnfElement.getNext()) {
 			
 			if (BnfElementLink.OR.equals(startBnfElement.getLink())) {
 				
-				boolean isOredValid = true;
-				for (BnfElement currentOredBnfElement = currentBnfElement; BnfElementLink.OR.equals(currentOredBnfElement.getLink()); currentOredBnfElement = currentOredBnfElement.getNext()) {
+				boolean foundTerminal = false;
+				for (BnfElement currentOredBnfElement = currentBnfElement; !foundTerminal && BnfElementLink.OR.equals(currentOredBnfElement.getLink()); currentOredBnfElement = currentOredBnfElement.getNext()) {
 					
-					if (isOredValid) {
-						
-						BnfElement tempBnfElement = currentOredBnfElement.clone();
-						tempBnfElement.setLink(BnfElementLink.DEFAULT);
-						tempBnfElement.setNext(null);
-						
-						isOredValid = checkSyntax(inputString, tempBnfElement, writeBuffer, currentBnfRule);
+					BnfElement tempBnfElement = currentOredBnfElement.clone();
+					tempBnfElement.setLink(BnfElementLink.DEFAULT);
+					tempBnfElement.setNext(null);
+					
+					if (foundTerminal = checkSyntax(startPosition, tmpPosition, inputString, tempBnfElement, currentBnfRule, values)) {
+						endPosition.setPosition(tmpPosition.getPosition());
 					}
 				}
-				
-				return isOredValid;
+								
+				return foundTerminal;
 			} else switch (currentBnfElement.getType()) {
 			
+				case SYMBOL_CALL:
+					if (!checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), values)) {
+						return false;
+					}
+					
+					String value = inputString.substring(startPosition.getPosition(), endPosition.getPosition());
+					currentBnfRule.addValue(value);
+					break;
 				case QUANTIFIER_ONCE_OR_NOT_AT_ALL:
 					break;
 				case QUANTIFIER_ZERO_OR_MORE_TIMES:
 					break;
 				case GROUP:
-					return checkSyntax(inputString, currentBnfElement.getContent(), writeBuffer, currentBnfRule);
+					return checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfRule, values);
 				case TERMINAL:
 					
 					String terminal = currentBnfElement.getTerminal();
 					for (int i = 0; i < terminal.length(); i++) {
-						if (inputString.charAt(pos + i) != terminal.charAt(i)) {
+						
+						char inputChar = inputString.charAt(startPosition.getPosition() + i);
+						char terminalChar = terminal.charAt(i);
+						if (inputChar != terminalChar) {
 							return false;
 						}
 					}
 					
-					pos += terminal.length();
+					endPosition.increment(terminal.length());
 					break;
-				case SYMBOL:
-					break;
+				case SYMBOL_REF:
+					return false;
 			}
 		}
 		

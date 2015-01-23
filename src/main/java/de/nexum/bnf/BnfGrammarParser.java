@@ -113,7 +113,7 @@ public class BnfGrammarParser {
 				default:
 					// a BNF symbol
 					if (Character.isLetterOrDigit(bnfGrammarText.charAt(pos))) {
-						currentElement.setType(BnfElementType.SYMBOL);
+						currentElement.setType(BnfElementType.SYMBOL_REF);
 						currentElement.setSymbol(scanSymbol());	
 					} else {
 						// end of this BNF rule
@@ -187,7 +187,7 @@ public class BnfGrammarParser {
 		BnfElement currentElement = null;
 		for (currentElement = firstElement; currentElement != null; currentElement = currentElement.getNext()) {
 			
-			if (BnfElementType.SYMBOL.equals(currentElement.getType())) {
+			if (BnfElementType.SYMBOL_REF.equals(currentElement.getType())) {
 				
 				// we found a BNF symbol, now try to find the corresponding BNF rule for that symbol
 				boolean foundRule = false;
@@ -197,6 +197,10 @@ public class BnfGrammarParser {
 						
 						// store the reference to the corresponding BNF rule
 						currentElement.setContent(currentRule.getFirstRuleElement());
+						// store a "backwards"-reference from the BND element to it's rule as well
+						currentElement.setRule(currentRule);
+						// change the type of the BNF element into a valid symbol call
+						currentElement.setType(BnfElementType.SYMBOL_CALL);
 						foundRule = true;
 					}
 				}

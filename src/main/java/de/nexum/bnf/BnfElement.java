@@ -1,5 +1,6 @@
 package de.nexum.bnf;
 
+
 /**
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
  */
@@ -11,6 +12,7 @@ public class BnfElement implements Cloneable {
 	private String symbol;
 	private BnfElement content;
 	private BnfElement next;
+	private BnfRule rule;
 	
 	public BnfElement() {
 		super();
@@ -25,7 +27,8 @@ public class BnfElement implements Cloneable {
 		this.terminal = bnfElement.terminal;
 		this.symbol = bnfElement.symbol;
 		this.content = bnfElement.content;
-		this.next = bnfElement.next;				
+		this.next = bnfElement.next;
+		this.rule = bnfElement.rule;
 	}
 	
 	public BnfElementType getType() {
@@ -76,6 +79,14 @@ public class BnfElement implements Cloneable {
 		this.link = link;
 	}
 	
+	public BnfRule getRule() {
+		return rule;
+	}
+
+	public void setRule(BnfRule rule) {
+		this.rule = rule;
+	}
+
 	@Override
 	public String toString() {		
 
@@ -96,7 +107,8 @@ public class BnfElement implements Cloneable {
 				case TERMINAL:
 					buf.append("'").append(currentElement.terminal).append("'");
 					break;
-				case SYMBOL:
+				case SYMBOL_REF:
+				case SYMBOL_CALL:
 					buf.append(currentElement.symbol);
 					break;
 			}
