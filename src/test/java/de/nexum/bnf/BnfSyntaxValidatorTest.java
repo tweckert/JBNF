@@ -25,7 +25,10 @@ public class BnfSyntaxValidatorTest {
 		
 		BnfRule firstRule = new BnfGrammarParser(bnfGrammarText).buildBnfGrammar();
 		
-		boolean isValid = new BnfSyntaxValidator().checkSyntax("This is a test.", firstRule);
+		boolean isValid = new BnfSyntaxValidator().checkSyntax("This is a test. ", firstRule);
+		Assert.assertTrue(isValid);
+		
+		isValid = new BnfSyntaxValidator().checkSyntax("This is a test.", firstRule);
 		Assert.assertTrue(isValid);
 	}
 	
