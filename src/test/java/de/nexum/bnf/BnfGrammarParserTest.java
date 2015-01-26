@@ -1,10 +1,7 @@
 package de.nexum.bnf;
 
-import java.io.IOException;
-
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import de.nexum.util.FileIO;
@@ -14,15 +11,10 @@ import de.nexum.util.FileIO;
  */
 public class BnfGrammarParserTest {
 	
-	private CharSequence bnfGrammarText;
-	
-	@Before
-	public void setup() throws IOException {
-		bnfGrammarText = FileIO.readFile("/test1.bnf", "UTF-8");
-	}
-	
 	@Test
-	public void testBuildBnfGrammar() throws BnfGrammarParseException {
+	public void testBuildBnfGrammar() throws Exception {
+		
+		CharSequence bnfGrammarText = FileIO.readFile("/sentence.bnf", "UTF-8");
 		
 		BnfRule firstRule = new BnfGrammarParser().buildBnfGrammar(bnfGrammarText);
 		

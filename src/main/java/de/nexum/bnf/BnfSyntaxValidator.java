@@ -12,7 +12,14 @@ import de.nexum.util.Position;
 public class BnfSyntaxValidator {
 
 	public boolean checkSyntax(String inputString, BnfRule firstBnfRule, Map<String,List<String>> valuesBySmbol) throws BnfSyntaxValidationException {
-		return checkSyntax(new Position(0), new Position(0), inputString, firstBnfRule.getFirstRuleElement(), firstBnfRule, valuesBySmbol);
+		
+		Position startPosition = new Position(0);
+		Position endPosition = new Position(0);
+		
+		boolean isValid = checkSyntax(startPosition, endPosition, inputString, firstBnfRule.getFirstRuleElement(), firstBnfRule, valuesBySmbol);
+		isValid &= (endPosition.getPosition() == inputString.length());
+		
+		return isValid;
 	}
 	
 	private boolean checkSyntax(Position startPosition, Position endPosition, String inputString, BnfElement startBnfElement, BnfRule currentBnfRule, Map<String, List<String>> valuesBySmbol) throws BnfSyntaxValidationException {		
@@ -73,12 +80,13 @@ public class BnfSyntaxValidator {
 				case QUANTIFIER_ONCE_OR_NOT_AT_ALL:
 					
 					int counter = 0;
-					for (counter = 0, isValid = true; isValid;) {
+					for (counter = 0, isValid = true; isValid; counter++) {
+						
+						if (counter > 1) {
+							return false;
+						}
+						
 						isValid = checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), valuesBySmbol);
-					}
-					
-					if (counter > 1) {
-						return false;
 					}
 					
 					break;
@@ -101,11 +109,16 @@ public class BnfSyntaxValidator {
 					
 				case TERMINAL:
 					
-					// compare the BNF terminal character by character with the input string
 					String terminal = currentBnfElement.getTerminal();
 					for (int i = 0; i < terminal.length(); i++) {
-												
-						char inputChar = inputString.charAt(startPosition.getPosition());
+						
+						// (remaining) input string is shorter than the terminal string
+						if ((startPosition.getPosition() + i) >= inputString.length()) {
+							return false;
+						}
+						
+						// compare the terminal string with the input string
+						char inputChar = inputString.charAt(startPosition.getPosition() + i);
 						char terminalChar = terminal.charAt(i);
 						if (inputChar != terminalChar) {
 							return false;
