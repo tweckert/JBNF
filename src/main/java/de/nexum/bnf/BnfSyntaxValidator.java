@@ -18,7 +18,7 @@ public class BnfSyntaxValidator {
 			if (BnfElementLink.OR.equals(startBnfElement.getLink())) {
 				
 				boolean foundTerminal = false;
-				for (BnfElement currentOredBnfElement = currentBnfElement; !foundTerminal && BnfElementLink.OR.equals(currentOredBnfElement.getLink()); currentOredBnfElement = currentOredBnfElement.getNext()) {
+				for (BnfElement currentOredBnfElement = currentBnfElement; !foundTerminal && currentOredBnfElement != null; currentOredBnfElement = currentOredBnfElement.getNext()) {
 					
 					BnfElement tempBnfElement = currentOredBnfElement.clone();
 					tempBnfElement.setLink(BnfElementLink.DEFAULT);
@@ -55,17 +55,20 @@ public class BnfSyntaxValidator {
 					
 				case QUANTIFIER_ZERO_OR_MORE_TIMES:
 					
-					Position tempStartPosition = new Position(startPosition);
 					boolean foundTerminal = false;
 					
 					do {
-						foundTerminal = checkSyntax(tempStartPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule());
+						foundTerminal = checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule());
 					} while (foundTerminal);
 					
 					break;
 					
 				case GROUP:
-					return checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfRule);
+					
+					if (!checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule())) {
+						return false;
+					}
+					break;
 					
 				case TERMINAL:
 					
@@ -84,7 +87,7 @@ public class BnfSyntaxValidator {
 					break;	
 					
 				case SYMBOL_REF:
-					return false;
+					throw new BnfSyntaxValidationException("Undefined BNF symbol '" + String.valueOf(currentBnfElement.getSymbol()) + "' found!");
 			}
 		}
 		
