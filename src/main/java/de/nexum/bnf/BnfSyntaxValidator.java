@@ -1,27 +1,17 @@
 package de.nexum.bnf;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.nexum.util.Position;
 
 /**
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
  */
 public class BnfSyntaxValidator {
-	
-	public BnfSyntaxValidator() {
-		
-		super();
-	}
 
 	public boolean checkSyntax(String inputString, BnfRule firstBnfRule) throws BnfSyntaxValidationException {
-		return checkSyntax(new Position(), new Position(), inputString, firstBnfRule.getFirstRuleElement(), firstBnfRule, new ArrayList<String>());
+		return checkSyntax(new Position(0), new Position(0), inputString, firstBnfRule.getFirstRuleElement(), firstBnfRule);
 	}
 	
-	private boolean checkSyntax(Position startPosition, Position endPosition, String inputString, BnfElement startBnfElement, BnfRule currentBnfRule, List<String> values) throws BnfSyntaxValidationException {
-		
-		Position tmpPosition = new Position(startPosition);
+	private boolean checkSyntax(Position startPosition, Position endPosition, String inputString, BnfElement startBnfElement, BnfRule currentBnfRule) throws BnfSyntaxValidationException {		
 		
 		for (BnfElement currentBnfElement = startBnfElement; currentBnfElement != null; currentBnfElement = currentBnfElement.getNext()) {
 			
@@ -34,8 +24,10 @@ public class BnfSyntaxValidator {
 					tempBnfElement.setLink(BnfElementLink.DEFAULT);
 					tempBnfElement.setNext(null);
 					
-					if (foundTerminal = checkSyntax(startPosition, tmpPosition, inputString, tempBnfElement, currentBnfRule, values)) {
-						endPosition.setPosition(tmpPosition.getPosition());
+					Position tempEndPosition = new Position(startPosition);
+					
+					if (foundTerminal = checkSyntax(startPosition, tempEndPosition, inputString, tempBnfElement, currentBnfRule)) {						
+						endPosition.setPosition(tempEndPosition.getPosition());
 					}
 				}
 								
@@ -43,25 +35,44 @@ public class BnfSyntaxValidator {
 			} else switch (currentBnfElement.getType()) {
 			
 				case SYMBOL_CALL:
-					if (!checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), values)) {
+					
+					BnfRule calledRule = currentBnfElement.getRule();
+					BnfElement firstElement = currentBnfElement.getContent();
+					Position originalStartPosition = new Position(startPosition);
+					
+					if (!checkSyntax(startPosition, endPosition, inputString, firstElement, calledRule)) {
 						return false;
 					}
 					
-					String value = inputString.substring(startPosition.getPosition(), endPosition.getPosition());
-					currentBnfRule.addValue(value);
+					String value = inputString.substring(originalStartPosition.getPosition(), endPosition.getPosition());
+					calledRule.addValue(value);
+					
+					startPosition.setPosition(endPosition.getPosition());
 					break;
+					
 				case QUANTIFIER_ONCE_OR_NOT_AT_ALL:
 					break;
+					
 				case QUANTIFIER_ZERO_OR_MORE_TIMES:
+					
+					Position tempStartPosition = new Position(startPosition);
+					boolean foundTerminal = false;
+					
+					do {
+						foundTerminal = checkSyntax(tempStartPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule());
+					} while (foundTerminal);
+					
 					break;
+					
 				case GROUP:
-					return checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfRule, values);
+					return checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfRule);
+					
 				case TERMINAL:
 					
 					String terminal = currentBnfElement.getTerminal();
 					for (int i = 0; i < terminal.length(); i++) {
-						
-						char inputChar = inputString.charAt(startPosition.getPosition() + i);
+												
+						char inputChar = inputString.charAt(startPosition.getPosition());
 						char terminalChar = terminal.charAt(i);
 						if (inputChar != terminalChar) {
 							return false;
@@ -69,7 +80,9 @@ public class BnfSyntaxValidator {
 					}
 					
 					endPosition.increment(terminal.length());
-					break;
+					startPosition.setPosition(endPosition);
+					break;	
+					
 				case SYMBOL_REF:
 					return false;
 			}
