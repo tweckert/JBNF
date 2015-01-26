@@ -100,7 +100,7 @@ public class BnfSyntaxValidator {
 						}
 					}
 					
-					endPosition.increment(terminal.length());
+					endPosition.add(terminal.length());
 					startPosition.setPosition(endPosition);
 					break;	
 					

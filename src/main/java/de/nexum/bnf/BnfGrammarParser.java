@@ -1,6 +1,7 @@
 package de.nexum.bnf;
 
 import de.nexum.util.CharacterUtils;
+import de.nexum.util.Position;
 
 /**
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
@@ -12,26 +13,16 @@ public class BnfGrammarParser {
 	private static final Character[] TERMINAL_TERMINATORS = {'\'', '\"'};
 	private static final Character[] SYMBOL_TERMINATORS = {' '};
 	
-	private int pos;
-	private CharSequence bnfGrammarText;
-	
-	public BnfGrammarParser(CharSequence bnfGrammarText) {
+	private Character nextCharacter(CharSequence bnfGrammarText, Position position) {
 		
-		super();		
-		this.pos = 0;
-		this.bnfGrammarText = bnfGrammarText;
-	}
-	
-	private Character nextCharacter() {
-		
-		if (pos >= bnfGrammarText.length()) {
+		if (position.getPosition() >= bnfGrammarText.length()) {
 			return null;
 		}
 		
 		Character nextCharacter = null;
-		for (nextCharacter = bnfGrammarText.charAt(pos); pos <= bnfGrammarText.length(); pos++) {
+		for (nextCharacter = bnfGrammarText.charAt(position.getPosition()); position.getPosition() <= bnfGrammarText.length(); position.increment()) {
 			
-			nextCharacter = bnfGrammarText.charAt(pos);
+			nextCharacter = bnfGrammarText.charAt(position.getPosition());
 			if (CharacterUtils.isSpace(nextCharacter) || CharacterUtils.isNewLine(nextCharacter)) {
 				continue;
 			} else {
@@ -42,21 +33,21 @@ public class BnfGrammarParser {
 		return nextCharacter;
 	}
 	
-	private Character nextLine() {
+	private Character nextLine(CharSequence bnfGrammarText, Position position) {
 
 		Character nextCharacter = null;
-		while (!CharacterUtils.isNewLine((nextCharacter = bnfGrammarText.charAt(pos)))) {
-			pos++;
+		while (!CharacterUtils.isNewLine((nextCharacter = bnfGrammarText.charAt(position.getPosition())))) {
+			position.increment();
 		}
 		
-		while (CharacterUtils.isNewLine((nextCharacter = bnfGrammarText.charAt(pos)))) {
-			pos++;
+		while (CharacterUtils.isNewLine((nextCharacter = bnfGrammarText.charAt(position.getPosition())))) {
+			position.increment();
 		}
 		
 		return nextCharacter;
 	}
 	
-	private BnfElement buildBnfRule() throws BnfGrammarParseException {
+	private BnfElement buildBnfRule(CharSequence bnfGrammarText, Position position) throws BnfGrammarParseException {
 		
 		BnfElement currentElement = null;
 		BnfElement previousElement = null;
@@ -74,31 +65,31 @@ public class BnfGrammarParser {
 			currentElement.setNext(null);
 			currentElement.setLink(BnfElementLink.DEFAULT);
 			
-			switch (nextCharacter()) {
+			switch (nextCharacter(bnfGrammarText, position)) {
 				case '(':
 					// a group of BNF elements
 					currentElement.setType(BnfElementType.GROUP);
-					pos++;
-					currentElement.setContent(buildBnfRule());
-					if (bnfGrammarText.charAt(pos++) != ')') {
+					position.increment();
+					currentElement.setContent(buildBnfRule(bnfGrammarText, position));
+					if (bnfGrammarText.charAt(position.increment()) != ')') {
 						throw new BnfGrammarParseException("')' expected!");
 					}
 					break;
 				case '[':
 					// a BNF element that may appear once or not at all
 					currentElement.setType(BnfElementType.QUANTIFIER_ONCE_OR_NOT_AT_ALL);
-					pos++;
-					currentElement.setContent(buildBnfRule());
-					if (bnfGrammarText.charAt(pos++) != ']') {
+					position.increment();
+					currentElement.setContent(buildBnfRule(bnfGrammarText, position));
+					if (bnfGrammarText.charAt(position.increment()) != ']') {
 						throw new BnfGrammarParseException("']' expected!");
 					}
 					break;
 				case '{':
 					// a BNF element that may appear zero or more times
 					currentElement.setType(BnfElementType.QUANTIFIER_ZERO_OR_MORE_TIMES);
-					pos++;
-					currentElement.setContent(buildBnfRule());
-					if (bnfGrammarText.charAt(pos++) != '}') {
+					position.increment();
+					currentElement.setContent(buildBnfRule(bnfGrammarText, position));
+					if (bnfGrammarText.charAt(position.increment()) != '}') {
 						throw new BnfGrammarParseException("'}' expected!");
 					}
 					break;
@@ -106,15 +97,15 @@ public class BnfGrammarParser {
 				case '\"':
 					// a BNF terminal
 					currentElement.setType(BnfElementType.TERMINAL);
-					pos++;
-					currentElement.setTerminal(scanTerminal());
-					pos++;
+					position.increment();
+					currentElement.setTerminal(scanTerminal(bnfGrammarText, position));
+					position.increment();
 					break;
 				default:
 					// a BNF symbol
-					if (Character.isLetterOrDigit(bnfGrammarText.charAt(pos))) {
+					if (Character.isLetterOrDigit(bnfGrammarText.charAt(position.getPosition()))) {
 						currentElement.setType(BnfElementType.SYMBOL_REF);
-						currentElement.setSymbol(scanSymbol());	
+						currentElement.setSymbol(scanSymbol(bnfGrammarText, position));	
 					} else {
 						// end of this BNF rule
 						if (previousElement != null) {
@@ -125,21 +116,21 @@ public class BnfGrammarParser {
 					break;
 			}
 			
-			if (nextCharacter() == '|') {
+			if (nextCharacter(bnfGrammarText, position) == '|') {
 				currentElement.setLink(BnfElementLink.OR);
-				pos++;
+				position.increment();
 			}
 			
 			previousElement = currentElement;
 		}
 	}
 	
-	private String scanTerminal() throws BnfGrammarParseException {
+	private String scanTerminal(CharSequence bnfGrammarText, Position position) throws BnfGrammarParseException {
 		
 		StringBuffer buf = new StringBuffer();
-		for (; pos <= bnfGrammarText.length(); pos++) {
+		for (; position.getPosition() <= bnfGrammarText.length(); position.increment()) {
 			
-			Character c = bnfGrammarText.charAt(pos);
+			Character c = bnfGrammarText.charAt(position.getPosition());
 			for (Character nextTerminator : TERMINAL_TERMINATORS) {
 				if (c == nextTerminator) {
 					return buf.toString();
@@ -152,12 +143,12 @@ public class BnfGrammarParser {
 		throw new BnfGrammarParseException("Terminator expected!");
 	}
 	
-	private String scanSymbol() throws BnfGrammarParseException {
+	private String scanSymbol(CharSequence bnfGrammarText, Position position) throws BnfGrammarParseException {
 		
 		StringBuffer buf = new StringBuffer();
-		for (; pos <= bnfGrammarText.length(); pos++) {
+		for (; position.getPosition() <= bnfGrammarText.length(); position.increment()) {
 			
-			Character c = bnfGrammarText.charAt(pos);
+			Character c = bnfGrammarText.charAt(position.getPosition());
 			for (Character nextTerminator : SYMBOL_TERMINATORS) {
 				if (c == nextTerminator) {
 					return buf.toString();
@@ -240,14 +231,14 @@ public class BnfGrammarParser {
 	 * @return the first BNF rule in the grammar
 	 * @throws BnfGrammarParseException
 	 */
-	public BnfRule buildBnfGrammar() throws BnfGrammarParseException {
+	public BnfRule buildBnfGrammar(CharSequence bnfGrammarText) throws BnfGrammarParseException {
 		
-		pos = 0;
+		Position position = new Position(0);
 		
 		BnfRule firstRule = null;
 		BnfRule currentRule = null;
 		
-		while (nextCharacter() != null) {
+		while (nextCharacter(bnfGrammarText, position) != null) {
 			
 			if (currentRule != null) {
 				currentRule.setNextRule(new BnfRule());
@@ -257,33 +248,33 @@ public class BnfGrammarParser {
 			}
 		
 			// skip comment lines
-			while(nextCharacter() == '#') {
-				nextLine();
+			while(nextCharacter(bnfGrammarText, position) == '#') {
+				nextLine(bnfGrammarText, position);
 			}
 			
 			// on the left side of the assignment ':=' is the BNF symbol placed
-			if (!Character.isLetterOrDigit(nextCharacter())) {
+			if (!Character.isLetterOrDigit(nextCharacter(bnfGrammarText, position))) {
 				throw new BnfGrammarParseException("BNF symbol expected!");
 			}
 			
 			StringBuffer buf = new StringBuffer();
-			for (Character c = nextCharacter(); Character.isLetterOrDigit((c = bnfGrammarText.charAt(pos))); pos++) {
+			for (Character c = nextCharacter(bnfGrammarText, position); Character.isLetterOrDigit((c = bnfGrammarText.charAt(position.getPosition()))); position.increment()) {
 				buf.append(c);
 			}
 			
 			String symbol = buf.toString();
 			
 			// then the assignment ':=' follows
-			if (nextCharacter() != ':' && bnfGrammarText.charAt(pos + 1) != '=') {
+			if (nextCharacter(bnfGrammarText, position) != ':' && bnfGrammarText.charAt(position.getPosition() + 1) != '=') {
 				throw new BnfGrammarParseException("BNF assignment expected!");
 			}
-			pos += 2;
+			position.add(2);
 			
 			// after the assignment ':=' the BNF rule follows
-			BnfElement firstRuleElement = buildBnfRule();
+			BnfElement firstRuleElement = buildBnfRule(bnfGrammarText, position);
 			
 			// the line ends with a semicolon ';'
-			if ((nextCharacter()) != ';') {
+			if ((nextCharacter(bnfGrammarText, position)) != ';') {
 				throw new BnfGrammarParseException("';' expected!");
 			}
 			
@@ -292,7 +283,7 @@ public class BnfGrammarParser {
 			currentRule.setFirstRuleElement(firstRuleElement);
 			
 			// continue with the next rule
-			pos++;
+			position.increment();
 		}
 		
 		// derive the BNF rules and their BNF elements

@@ -24,7 +24,7 @@ public class BnfGrammarParserTest {
 	@Test
 	public void testBuildBnfGrammar() throws BnfGrammarParseException {
 		
-		BnfRule firstRule = new BnfGrammarParser(bnfGrammarText).buildBnfGrammar();
+		BnfRule firstRule = new BnfGrammarParser().buildBnfGrammar(bnfGrammarText);
 		
 		Assert.assertTrue("sentence".equals(firstRule.getSymbol()));
 		Assert.assertTrue("sentence := word{' 'word}('. '|'.');".equals(firstRule.toString()));

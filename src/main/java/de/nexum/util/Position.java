@@ -37,11 +37,19 @@ public class Position {
 		this.position = position;
 	}
 	
-	public void increment(int increment) {
+	public int increment() {
+		return this.position++;
+	}
+	
+	public int decrement() {
+		return this.position--;
+	}
+	
+	public void add(int increment) {
 		this.position += increment;
 	}
 	
-	public void decrement(int decrement) {
+	public void sub(int decrement) {
 		this.position -= decrement;
 	}
 	

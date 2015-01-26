@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
  */
@@ -51,10 +49,9 @@ public class BnfRule {
 	
 	@Override
 	public String toString() {		
-		return new StringBuffer().append("'").append(String.valueOf(symbol))
-				.append(" := ").append(String.valueOf(firstRuleElement))
-				.append(";', values: {").append(StringUtils.join(values, ","))
-				.append("}").toString();
+		return new StringBuffer().append(String.valueOf(symbol)).append(" := ")
+				.append(String.valueOf(firstRuleElement)).append(";")
+				.toString();
 	}
 	
 }

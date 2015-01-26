@@ -23,7 +23,7 @@ public class BnfSyntaxValidatorTest {
 	@Test
 	public void testBuildBnfGrammar() throws BnfGrammarParseException, BnfSyntaxValidationException {
 		
-		BnfRule firstRule = new BnfGrammarParser(bnfGrammarText).buildBnfGrammar();
+		BnfRule firstRule = new BnfGrammarParser().buildBnfGrammar(bnfGrammarText);
 		
 		boolean isValid = new BnfSyntaxValidator().checkSyntax("This is a test. ", firstRule);
 		Assert.assertTrue(isValid);
