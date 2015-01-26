@@ -1,5 +1,9 @@
 package de.nexum.bnf;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import de.nexum.util.Position;
 
 /**
@@ -7,11 +11,11 @@ import de.nexum.util.Position;
  */
 public class BnfSyntaxValidator {
 
-	public boolean checkSyntax(String inputString, BnfRule firstBnfRule) throws BnfSyntaxValidationException {
-		return checkSyntax(new Position(0), new Position(0), inputString, firstBnfRule.getFirstRuleElement(), firstBnfRule);
+	public boolean checkSyntax(String inputString, BnfRule firstBnfRule, Map<String,List<String>> valuesBySmbol) throws BnfSyntaxValidationException {
+		return checkSyntax(new Position(0), new Position(0), inputString, firstBnfRule.getFirstRuleElement(), firstBnfRule, valuesBySmbol);
 	}
 	
-	private boolean checkSyntax(Position startPosition, Position endPosition, String inputString, BnfElement startBnfElement, BnfRule currentBnfRule) throws BnfSyntaxValidationException {		
+	private boolean checkSyntax(Position startPosition, Position endPosition, String inputString, BnfElement startBnfElement, BnfRule currentBnfRule, Map<String, List<String>> valuesBySmbol) throws BnfSyntaxValidationException {		
 		
 		boolean isValid = false;
 		
@@ -30,7 +34,7 @@ public class BnfSyntaxValidator {
 					
 					Position tempEndPosition = new Position(startPosition);
 					
-					if (isValid = checkSyntax(startPosition, tempEndPosition, inputString, tempBnfElement, currentBnfRule)) {						
+					if (isValid = checkSyntax(startPosition, tempEndPosition, inputString, tempBnfElement, currentBnfRule, valuesBySmbol)) {						
 						endPosition.setPosition(tempEndPosition.getPosition());
 					}
 				}
@@ -45,14 +49,22 @@ public class BnfSyntaxValidator {
 					BnfElement firstElement = currentBnfElement.getContent();
 					Position originalStartPosition = new Position(startPosition);
 					
-					if (!checkSyntax(startPosition, endPosition, inputString, firstElement, derivedRule)) {
+					if (!checkSyntax(startPosition, endPosition, inputString, firstElement, derivedRule, valuesBySmbol)) {
 						// the derived rule is invalid
 						return false;
 					}
 					
 					// store the contents of the derived rule for debugging purposes
 					String value = inputString.substring(originalStartPosition.getPosition(), endPosition.getPosition());
-					derivedRule.addValue(value);
+
+					List<String> symbolValues = null;
+					if ((symbolValues = valuesBySmbol.get(derivedRule.getSymbol())) == null) {
+
+						symbolValues = new ArrayList<String>();
+						valuesBySmbol.put(derivedRule.getSymbol(), symbolValues);
+					}
+					
+					symbolValues.add(value);
 					
 					// continue validating the input string from the end position
 					startPosition.setPosition(endPosition.getPosition());
@@ -62,7 +74,7 @@ public class BnfSyntaxValidator {
 					
 					int counter = 0;
 					for (counter = 0, isValid = true; isValid;) {
-						isValid = checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule());
+						isValid = checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), valuesBySmbol);
 					}
 					
 					if (counter > 1) {
@@ -74,7 +86,7 @@ public class BnfSyntaxValidator {
 				case QUANTIFIER_ZERO_OR_MORE_TIMES:
 									
 					for (isValid = true; isValid;) {
-						isValid = checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule());
+						isValid = checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), valuesBySmbol);
 					}
 					
 					break;
@@ -82,7 +94,7 @@ public class BnfSyntaxValidator {
 				case GROUP:
 					
 					// simply validate the BNF element(s) within the group
-					if (!checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule())) {
+					if (!checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), valuesBySmbol)) {
 						return false;
 					}
 					break;

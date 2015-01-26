@@ -1,6 +1,9 @@
 package de.nexum.bnf;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,11 +27,14 @@ public class BnfSyntaxValidatorTest {
 	public void testBuildBnfGrammar() throws BnfGrammarParseException, BnfSyntaxValidationException {
 		
 		BnfRule firstRule = new BnfGrammarParser().buildBnfGrammar(bnfGrammarText);
+		Map<String, List<String>> values = 	new HashMap<String, List<String>>();
 		
-		boolean isValid = new BnfSyntaxValidator().checkSyntax("This is a test. ", firstRule);
+		boolean isValid = new BnfSyntaxValidator().checkSyntax("This is a test. ", firstRule, values);
 		Assert.assertTrue(isValid);
 		
-		isValid = new BnfSyntaxValidator().checkSyntax("This is a test.", firstRule);
+		values.clear();
+		
+		isValid = new BnfSyntaxValidator().checkSyntax("This is a test.", firstRule, values);
 		Assert.assertTrue(isValid);
 	}
 	

@@ -17,4 +17,5 @@ public enum BnfElementType {
 	SYMBOL_REF,
 	/** BNF symbol that calls another BNF rule */
 	SYMBOL_CALL
+	
 }
