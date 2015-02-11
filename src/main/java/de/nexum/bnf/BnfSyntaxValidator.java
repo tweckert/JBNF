@@ -11,18 +11,18 @@ import de.nexum.util.Position;
  */
 public class BnfSyntaxValidator {
 
-	public boolean checkSyntax(String inputString, BnfRule firstBnfRule, Map<String,List<String>> valuesBySmbol) throws BnfSyntaxValidationException {
+	public boolean isValid(String inputString, BnfRule firstBnfRule, Map<String,List<String>> valuesBySmbol) throws BnfSyntaxException {
 		
 		Position startPosition = new Position(0);
 		Position endPosition = new Position(0);
 		
-		boolean isValid = checkSyntax(startPosition, endPosition, inputString, firstBnfRule.getFirstRuleElement(), firstBnfRule, valuesBySmbol);
+		boolean isValid = isValid(startPosition, endPosition, inputString, firstBnfRule.getFirstRuleElement(), firstBnfRule, valuesBySmbol);
 		isValid &= (endPosition.getPosition() == inputString.length());
 		
 		return isValid;
 	}
 	
-	private boolean checkSyntax(Position startPosition, Position endPosition, String inputString, BnfElement startBnfElement, BnfRule currentBnfRule, Map<String, List<String>> valuesBySmbol) throws BnfSyntaxValidationException {		
+	private boolean isValid(Position startPosition, Position endPosition, String inputString, BnfElement startBnfElement, BnfRule currentBnfRule, Map<String, List<String>> valuesBySmbol) throws BnfSyntaxException {		
 		
 		boolean isValid = false;
 		
@@ -41,7 +41,7 @@ public class BnfSyntaxValidator {
 					
 					Position tempEndPosition = new Position(startPosition);
 					
-					if (isValid = checkSyntax(startPosition, tempEndPosition, inputString, tempBnfElement, currentBnfRule, valuesBySmbol)) {						
+					if (isValid = isValid(startPosition, tempEndPosition, inputString, tempBnfElement, currentBnfRule, valuesBySmbol)) {						
 						endPosition.setPosition(tempEndPosition.getPosition());
 					}
 				}
@@ -56,7 +56,7 @@ public class BnfSyntaxValidator {
 					BnfElement firstElement = currentBnfElement.getContent();
 					Position originalStartPosition = new Position(startPosition);
 					
-					if (!checkSyntax(startPosition, endPosition, inputString, firstElement, derivedRule, valuesBySmbol)) {
+					if (!isValid(startPosition, endPosition, inputString, firstElement, derivedRule, valuesBySmbol)) {
 						// the derived rule is invalid
 						return false;
 					}
@@ -86,7 +86,7 @@ public class BnfSyntaxValidator {
 							return false;
 						}
 						
-						isValid = checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), valuesBySmbol);
+						isValid = isValid(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), valuesBySmbol);
 					}
 					
 					break;
@@ -94,7 +94,7 @@ public class BnfSyntaxValidator {
 				case QUANTIFIER_ZERO_OR_MORE_TIMES:
 									
 					for (isValid = true; isValid;) {
-						isValid = checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), valuesBySmbol);
+						isValid = isValid(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), valuesBySmbol);
 					}
 					
 					break;
@@ -102,7 +102,7 @@ public class BnfSyntaxValidator {
 				case GROUP:
 					
 					// simply validate the BNF element(s) within the group
-					if (!checkSyntax(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), valuesBySmbol)) {
+					if (!isValid(startPosition, endPosition, inputString, currentBnfElement.getContent(), currentBnfElement.getContent().getRule(), valuesBySmbol)) {
 						return false;
 					}
 					break;
@@ -130,7 +130,7 @@ public class BnfSyntaxValidator {
 					break;	
 					
 				case SYMBOL_REF:
-					throw new BnfSyntaxValidationException("Undefined BNF symbol '" + String.valueOf(currentBnfElement.getSymbol()) + "' found!");
+					throw new BnfSyntaxException("Undefined BNF symbol '" + String.valueOf(currentBnfElement.getSymbol()) + "' found!");
 			}
 		}
 		

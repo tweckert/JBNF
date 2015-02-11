@@ -1,1 +1,1 @@
-token := ("hello"|"world");
+token := ("hello" | "world");

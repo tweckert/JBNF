@@ -5,14 +5,14 @@ package de.nexum.bnf;
  * 
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
  */
-public class BnfSyntaxValidationException extends Exception {
+public class BnfSyntaxException extends Exception {
 
 	private static final long serialVersionUID = 1271432780551500490L;
 
 	/**
 	 * Creates a new exception with no detail message or root cause.
 	 */
-	public BnfSyntaxValidationException() {
+	public BnfSyntaxException() {
 
 		super();
 	}
@@ -22,7 +22,7 @@ public class BnfSyntaxValidationException extends Exception {
 	 * 
 	 * @param rootCause the root cause
 	 */
-	public BnfSyntaxValidationException(Throwable rootCause) {
+	public BnfSyntaxException(Throwable rootCause) {
 
 		super(rootCause);
 	}
@@ -32,7 +32,7 @@ public class BnfSyntaxValidationException extends Exception {
 	 * 
 	 * @param message the detail message
 	 */
-	public BnfSyntaxValidationException(String message) {
+	public BnfSyntaxException(String message) {
 
 		super(message);
 	}
@@ -43,7 +43,7 @@ public class BnfSyntaxValidationException extends Exception {
 	 * @param message the detail message
 	 * @param rootCause the cause of the exception
 	 */
-	public BnfSyntaxValidationException(String message, Throwable rootCause) {
+	public BnfSyntaxException(String message, Throwable rootCause) {
 
 		super(message, rootCause);
 	}

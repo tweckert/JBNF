@@ -5,14 +5,14 @@ package de.nexum.bnf;
  * 
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
  */
-public class BnfGrammarParseException extends Exception {
+public class BnfGrammarException extends Exception {
 
 	private static final long serialVersionUID = 2305580352394242406L;
 
 	/**
 	 * Creates a new exception with no detail message or root cause.
 	 */
-	public BnfGrammarParseException() {
+	public BnfGrammarException() {
 
 		super();
 	}
@@ -22,7 +22,7 @@ public class BnfGrammarParseException extends Exception {
 	 * 
 	 * @param rootCause the root cause
 	 */
-	public BnfGrammarParseException(Throwable rootCause) {
+	public BnfGrammarException(Throwable rootCause) {
 
 		super(rootCause);
 	}
@@ -32,7 +32,7 @@ public class BnfGrammarParseException extends Exception {
 	 * 
 	 * @param message the detail message
 	 */
-	public BnfGrammarParseException(String message) {
+	public BnfGrammarException(String message) {
 
 		super(message);
 	}
@@ -43,7 +43,7 @@ public class BnfGrammarParseException extends Exception {
 	 * @param message the detail message
 	 * @param rootCause the cause of the exception
 	 */
-	public BnfGrammarParseException(String message, Throwable rootCause) {
+	public BnfGrammarException(String message, Throwable rootCause) {
 
 		super(message, rootCause);
 	}
