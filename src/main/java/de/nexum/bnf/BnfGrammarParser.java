@@ -200,7 +200,7 @@ public class BnfGrammarParser {
 					if (currentRule.getSymbol().equals(currentElement.getSymbol())) {
 						
 						// store the reference to the corresponding BNF rule
-						currentElement.setContent(currentRule.getFirstRuleElement());
+						currentElement.setContent(currentRule.getFirstElement());
 						// store a "backwards"-reference from the BND element to it's rule as well
 						currentElement.setRule(currentRule);
 						// change the type of the BNF element into a valid symbol call
@@ -234,7 +234,7 @@ public class BnfGrammarParser {
 		
 		BnfRule currentRule = null;
 		for (currentRule = firstRule; currentRule != null; currentRule = currentRule.getNextRule()) {
-			deriveBnfElements(firstRule, currentRule.getFirstRuleElement());
+			deriveBnfElements(firstRule, currentRule.getFirstElement());
 		}
 	}
 	
@@ -284,7 +284,7 @@ public class BnfGrammarParser {
 			position.add(2);
 			
 			// after the assignment ':=' the BNF rule follows
-			BnfElement firstRuleElement = buildBnfRule(bnfGrammarText, position);
+			BnfElement firstElement = buildBnfRule(bnfGrammarText, position);
 			
 			// the line ends with a semicolon ';'
 			if ((nextCharacter(bnfGrammarText, position)) != BnfConstants.RULE_TERMINATOR) {
@@ -301,7 +301,7 @@ public class BnfGrammarParser {
 			
 			// store the BNF symbol and it's rule(s)
 			currentRule.setSymbol(symbol);
-			currentRule.setFirstRuleElement(firstRuleElement);
+			currentRule.setFirstElement(firstElement);
 			
 			// continue with the next rule
 			position.increment();

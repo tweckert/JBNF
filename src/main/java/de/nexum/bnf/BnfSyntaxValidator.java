@@ -11,25 +11,25 @@ import de.nexum.util.Position;
  */
 public class BnfSyntaxValidator {
 
-	public boolean isValid(String inputString, BnfRule firstBnfRule, Map<String,List<String>> valuesBySmbol) throws BnfSyntaxException {
+	public boolean isValid(String inputString, BnfRule startRule, Map<String,List<String>> valuesBySmbol) throws BnfSyntaxException {
 		
 		Position startPosition = new Position(0);
 		Position endPosition = new Position(0);
 		
-		boolean isValid = isValid(startPosition, endPosition, inputString, firstBnfRule.getFirstRuleElement(), firstBnfRule, valuesBySmbol);
+		boolean isValid = isValid(startPosition, endPosition, inputString, startRule.getFirstElement(), startRule, valuesBySmbol);
 		isValid &= (endPosition.getPosition() == inputString.length());
 		
 		return isValid;
 	}
 	
-	private boolean isValid(Position startPosition, Position endPosition, String inputString, BnfElement startBnfElement, BnfRule currentBnfRule, Map<String, List<String>> valuesBySmbol) throws BnfSyntaxException {		
+	private boolean isValid(Position startPosition, Position endPosition, String inputString, BnfElement startElement, BnfRule currentBnfRule, Map<String, List<String>> valuesBySmbol) throws BnfSyntaxException {		
 		
 		boolean isValid = false;
 		
 		// validate all the chained BNF elements for the current rule
-		for (BnfElement currentBnfElement = startBnfElement; currentBnfElement != null; currentBnfElement = currentBnfElement.getNext()) {
+		for (BnfElement currentBnfElement = startElement; currentBnfElement != null; currentBnfElement = currentBnfElement.getNext()) {
 			
-			if (BnfElementLink.OR.equals(startBnfElement.getLink())) {
+			if (BnfElementLink.OR.equals(startElement.getLink())) {
 				
 				isValid = false;
 				for (BnfElement currentOredBnfElement = currentBnfElement; !isValid && currentOredBnfElement != null; currentOredBnfElement = currentOredBnfElement.getNext()) {

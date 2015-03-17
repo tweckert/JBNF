@@ -7,7 +7,7 @@ package de.nexum.bnf;
 public class BnfRule {
 
 	private String symbol;
-	private BnfElement firstRuleElement;
+	private BnfElement firstElement;
 	private BnfRule nextRule;
 	
 	public String getSymbol() {
@@ -18,12 +18,12 @@ public class BnfRule {
 		this.symbol = symbol;
 	}
 	
-	public BnfElement getFirstRuleElement() {
-		return firstRuleElement;	
+	public BnfElement getFirstElement() {
+		return firstElement;	
 	}
 	
-	public void setFirstRuleElement(BnfElement firstElement) {
-		this.firstRuleElement = firstElement;
+	public void setFirstElement(BnfElement firstElement) {
+		this.firstElement = firstElement;
 	}
 	
 	public BnfRule getNextRule() {
@@ -37,7 +37,7 @@ public class BnfRule {
 	@Override
 	public String toString() {		
 		return new StringBuffer().append(String.valueOf(symbol)).append(" := ")
-				.append(String.valueOf(firstRuleElement)).append(";")
+				.append(String.valueOf(firstElement)).append(";")
 				.toString();
 	}
 	
