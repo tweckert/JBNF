@@ -1,5 +1,7 @@
 package de.nexum.util;
 
+import de.nexum.bnf.BnfConstants;
+
 
 /**
  * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
@@ -11,7 +13,7 @@ public class CharacterUtils {
 	}
 	
 	public static boolean isSpace(Character c) {
-		return (c == ' ' || c == '\t');
+		return (c == BnfConstants.SPACE_CHAR || c == '\t');
 	}
 	
 	public static void getLinePosition(CharSequence str, int position, Position line, Position linePosition) {
