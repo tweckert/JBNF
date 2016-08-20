@@ -1,12 +1,12 @@
-package de.nexum.bnf;
+package javax.bnf;
+
+import javax.util.CharacterUtils;
+import javax.util.Position;
 
 import org.apache.commons.lang.StringUtils;
 
-import de.nexum.util.CharacterUtils;
-import de.nexum.util.Position;
-
 /**
- * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
+ * @author Thomas Weckert
  */
 public class BnfGrammarParser {
 	

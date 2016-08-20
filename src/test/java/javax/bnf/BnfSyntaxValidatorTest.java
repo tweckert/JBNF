@@ -1,16 +1,19 @@
-package de.nexum.bnf;
+package javax.bnf;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.bnf.BnfGrammarParser;
+import javax.bnf.BnfRule;
+import javax.bnf.BnfSyntaxValidator;
+import javax.util.FileIO;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.nexum.util.FileIO;
-
 /**
- * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
+ * @author Thomas Weckert
  */
 public class BnfSyntaxValidatorTest {
 	

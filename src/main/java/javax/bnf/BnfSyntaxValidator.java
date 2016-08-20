@@ -1,13 +1,13 @@
-package de.nexum.bnf;
+package javax.bnf;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import de.nexum.util.Position;
+import javax.util.Position;
 
 /**
- * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
+ * @author Thomas Weckert
  */
 public class BnfSyntaxValidator {
 

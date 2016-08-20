@@ -1,10 +1,10 @@
-package de.nexum.util;
+package javax.util;
 
-import de.nexum.bnf.BnfConstants;
+import javax.bnf.BnfConstants;
 
 
 /**
- * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
+ * @author Thomas Weckert
  */
 public class CharacterUtils {
 

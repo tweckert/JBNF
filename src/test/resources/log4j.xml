@@ -24,7 +24,7 @@
 		</filter>
 	</appender>
 
-	<logger name="de.nexum">
+	<logger name="javax">
 		<level value="DEBUG" />
 	</logger>		
 	

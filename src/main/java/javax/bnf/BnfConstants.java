@@ -1,7 +1,7 @@
-package de.nexum.bnf;
+package javax.bnf;
 
 /**
- * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
+ * @author Thomas Weckert
  */
 public class BnfConstants {
 

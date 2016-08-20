@@ -1,18 +1,18 @@
-package de.nexum.bnf;
+package javax.bnf;
 
 /**
- * Thrown when an error occurs while a BNF grammar is parsed.
+ * Thrown when an error occurs while the syntax of an input string is validated against a BNF grammar.
  * 
- * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
+ * @author Thomas Weckert
  */
-public class BnfGrammarException extends Exception {
+public class BnfSyntaxException extends Exception {
 
-	private static final long serialVersionUID = 2305580352394242406L;
+	private static final long serialVersionUID = 1271432780551500490L;
 
 	/**
 	 * Creates a new exception with no detail message or root cause.
 	 */
-	public BnfGrammarException() {
+	public BnfSyntaxException() {
 
 		super();
 	}
@@ -22,7 +22,7 @@ public class BnfGrammarException extends Exception {
 	 * 
 	 * @param rootCause the root cause
 	 */
-	public BnfGrammarException(Throwable rootCause) {
+	public BnfSyntaxException(Throwable rootCause) {
 
 		super(rootCause);
 	}
@@ -32,7 +32,7 @@ public class BnfGrammarException extends Exception {
 	 * 
 	 * @param message the detail message
 	 */
-	public BnfGrammarException(String message) {
+	public BnfSyntaxException(String message) {
 
 		super(message);
 	}
@@ -43,9 +43,9 @@ public class BnfGrammarException extends Exception {
 	 * @param message the detail message
 	 * @param rootCause the cause of the exception
 	 */
-	public BnfGrammarException(String message, Throwable rootCause) {
+	public BnfSyntaxException(String message, Throwable rootCause) {
 
 		super(message, rootCause);
 	}
-
+	
 }

@@ -1,13 +1,15 @@
-package de.nexum.bnf;
+package javax.bnf;
+
+import javax.bnf.BnfGrammarParser;
+import javax.bnf.BnfRule;
+import javax.util.FileIO;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import de.nexum.util.FileIO;
-
 /**
- * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
+ * @author Thomas Weckert
  */
 public class BnfGrammarParserTest {
 	

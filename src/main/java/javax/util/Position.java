@@ -1,9 +1,9 @@
-package de.nexum.util;
+package javax.util;
 
 import java.util.UUID;
 
 /**
- * @author <a href="mailto:thomas.weckert@nexum.de">Thomas Weckert</a>
+ * @author Thomas Weckert
  */
 public class Position {
 	
