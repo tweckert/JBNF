@@ -13,8 +13,7 @@ public class BnfSyntaxException extends Exception {
 	 * Creates a new exception with no detail message or root cause.
 	 */
 	public BnfSyntaxException() {
-
-		super();
+		// Intentionally left blank
 	}
 
 	/**
@@ -22,8 +21,7 @@ public class BnfSyntaxException extends Exception {
 	 * 
 	 * @param rootCause the root cause
 	 */
-	public BnfSyntaxException(Throwable rootCause) {
-
+	public BnfSyntaxException(final Throwable rootCause) {
 		super(rootCause);
 	}
 
@@ -32,8 +30,7 @@ public class BnfSyntaxException extends Exception {
 	 * 
 	 * @param message the detail message
 	 */
-	public BnfSyntaxException(String message) {
-
+	public BnfSyntaxException(final String message) {
 		super(message);
 	}
 
@@ -43,8 +40,7 @@ public class BnfSyntaxException extends Exception {
 	 * @param message the detail message
 	 * @param rootCause the cause of the exception
 	 */
-	public BnfSyntaxException(String message, Throwable rootCause) {
-
+	public BnfSyntaxException(final String message, final Throwable rootCause) {
 		super(message, rootCause);
 	}
 	

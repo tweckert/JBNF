@@ -13,8 +13,7 @@ public class BnfGrammarException extends Exception {
 	 * Creates a new exception with no detail message or root cause.
 	 */
 	public BnfGrammarException() {
-
-		super();
+		// intentionally left blank
 	}
 
 	/**
@@ -22,8 +21,7 @@ public class BnfGrammarException extends Exception {
 	 * 
 	 * @param rootCause the root cause
 	 */
-	public BnfGrammarException(Throwable rootCause) {
-
+	public BnfGrammarException(final Throwable rootCause) {
 		super(rootCause);
 	}
 
@@ -32,8 +30,7 @@ public class BnfGrammarException extends Exception {
 	 * 
 	 * @param message the detail message
 	 */
-	public BnfGrammarException(String message) {
-
+	public BnfGrammarException(final String message) {
 		super(message);
 	}
 
@@ -44,7 +41,6 @@ public class BnfGrammarException extends Exception {
 	 * @param rootCause the cause of the exception
 	 */
 	public BnfGrammarException(String message, Throwable rootCause) {
-
 		super(message, rootCause);
 	}
 

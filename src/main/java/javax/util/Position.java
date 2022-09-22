@@ -19,8 +19,6 @@ public class Position {
 	}
 	
 	public Position(int position) {
-		
-		super();
 		this.position = position;
 		this.uuid = UUID.randomUUID().toString();
 	}
@@ -74,7 +72,7 @@ public class Position {
 			return false;
 		}
 
-		Position otherPosition = (Position) obj;
+		final Position otherPosition = (Position) obj;
 
 		return this.position == otherPosition.position;
 	}

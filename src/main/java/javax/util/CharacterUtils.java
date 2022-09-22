@@ -8,15 +8,16 @@ import javax.bnf.BnfConstants;
  */
 public class CharacterUtils {
 
-	public static boolean isNewLine(Character c) {
+	public static boolean isNewLine(final Character c) {
 		return (c == '\n' || c == '\r');
 	}
 	
-	public static boolean isSpace(Character c) {
+	public static boolean isSpace(final Character c) {
 		return (c == BnfConstants.SPACE_CHAR || c == '\t');
 	}
 	
-	public static void getLinePosition(CharSequence str, int position, Position line, Position linePosition) {
+	public static void getLinePosition(final CharSequence str, final int position,
+									   final Position line, final Position linePosition) {
 		
 		line.setPosition(1);
 		linePosition.setPosition(1);
@@ -25,8 +26,8 @@ public class CharacterUtils {
 		int lastNewLinePos = 0;
 		
 		for (int i = 0; i < position && i < str.length(); i++) {
-			
-			Character c = str.charAt(i);
+
+			final Character c = str.charAt(i);
 			if (c == '\r') {
 				line.increment();
 				lastNewLinePos = i;

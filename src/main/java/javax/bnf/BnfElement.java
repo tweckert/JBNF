@@ -13,14 +13,12 @@ public class BnfElement implements Cloneable {
 	private BnfElement content;
 	private BnfElement next;
 	private BnfRule rule;
-	
+
 	public BnfElement() {
-		super();
+		// intentionally left blank
 	}
-	
+
 	private BnfElement(BnfElement bnfElement) {
-		
-		super();
 		
 		this.type = bnfElement.type;
 		this.link = bnfElement.link;

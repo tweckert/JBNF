@@ -12,9 +12,9 @@ public class BnfGrammarParser {
 	
 	//private static final Log LOG = LogFactory.getLog(BnfGrammarParser.class);
 	
-	private Character nextCharacter(CharSequence bnfGrammarText, Position position) {
+	private Character nextCharacter(final CharSequence bnfGrammarText, final Position position) {
 		
-		if (position.getPosition() >= bnfGrammarText.length()) {
+		if (bnfGrammarText != null && position != null && position.getPosition() >= bnfGrammarText.length()) {
 			return null;
 		}
 		
@@ -32,7 +32,7 @@ public class BnfGrammarParser {
 		return nextCharacter;
 	}
 	
-	private Character nextLine(CharSequence bnfGrammarText, Position position) {
+	private Character nextLine(final CharSequence bnfGrammarText, final Position position) {
 
 		Character nextCharacter = null;
 		while (!CharacterUtils.isNewLine((nextCharacter = bnfGrammarText.charAt(position.getPosition())))) {
@@ -46,7 +46,7 @@ public class BnfGrammarParser {
 		return nextCharacter;
 	}
 	
-	private BnfElement buildBnfRule(CharSequence bnfGrammarText, Position position) throws BnfGrammarException {
+	private BnfElement buildBnfRule(final CharSequence bnfGrammarText, final Position position) throws BnfGrammarException {
 		
 		BnfElement currentElement = null;
 		BnfElement previousElement = null;
@@ -138,13 +138,13 @@ public class BnfGrammarParser {
 		}
 	}
 	
-	private String scanTerminal(CharSequence bnfGrammarText, Position position) throws BnfGrammarException {
+	private String scanTerminal(final CharSequence bnfGrammarText, final Position position) throws BnfGrammarException {
 		
-		StringBuffer buf = new StringBuffer();
+		final StringBuffer buf = new StringBuffer();
 		for (; position.getPosition() <= bnfGrammarText.length(); position.increment()) {
 			
-			Character c = bnfGrammarText.charAt(position.getPosition());
-			for (Character nextTerminator : BnfConstants.TERMINAL_TERMINATORS) {
+			final Character c = bnfGrammarText.charAt(position.getPosition());
+			for (final Character nextTerminator : BnfConstants.TERMINAL_TERMINATORS) {
 				if (c == nextTerminator) {
 					return buf.toString();
 				}
@@ -156,17 +156,18 @@ public class BnfGrammarParser {
 		throw new BnfGrammarException("Terminator expected!");
 	}
 	
-	private String scanSymbol(CharSequence bnfGrammarText, Position position) throws BnfGrammarException {
+	private String scanSymbol(final CharSequence bnfGrammarText, final Position position) throws BnfGrammarException {
 		
-		StringBuffer buf = new StringBuffer();
+		final StringBuffer buf = new StringBuffer();
 		for (; position.getPosition() <= bnfGrammarText.length(); position.increment()) {
 			
-			Character c = bnfGrammarText.charAt(position.getPosition());
-			for (Character nextTerminator : BnfConstants.SYMBOL_TERMINATORS) {
+			final Character c = bnfGrammarText.charAt(position.getPosition());
+			for (final Character nextTerminator : BnfConstants.SYMBOL_TERMINATORS) {
 				if (c == nextTerminator) {
 					return buf.toString();
 				}
 			}
+
 			if (!Character.isLetterOrDigit(c)) {
 				return buf.toString();
 			}
@@ -186,7 +187,7 @@ public class BnfGrammarParser {
 	 * @param firstElement the first BNF element of the current rule
 	 * @throws BnfGrammarException
 	 */
-	private void deriveBnfElements(BnfRule firstRule, BnfElement firstElement) throws BnfGrammarException {
+	private void deriveBnfElements(final BnfRule firstRule, final BnfElement firstElement) throws BnfGrammarException {
 		
 		BnfElement currentElement = null;
 		for (currentElement = firstElement; currentElement != null; currentElement = currentElement.getNext()) {
@@ -230,7 +231,7 @@ public class BnfGrammarParser {
 	 * @param firstRule the first rule of the entire BNF grammar
 	 * @throws BnfGrammarException
 	 */
-	private void deriveBnfRules(BnfRule firstRule) throws BnfGrammarException {
+	private void deriveBnfRules(final BnfRule firstRule) throws BnfGrammarException {
 		
 		BnfRule currentRule = null;
 		for (currentRule = firstRule; currentRule != null; currentRule = currentRule.getNextRule()) {
@@ -244,9 +245,9 @@ public class BnfGrammarParser {
 	 * @return the first BNF rule in the grammar
 	 * @throws BnfGrammarException
 	 */
-	public BnfRule buildBnfGrammar(CharSequence bnfGrammarText) throws BnfGrammarException {
+	public BnfRule buildBnfGrammar(final CharSequence bnfGrammarText) throws BnfGrammarException {
 		
-		Position position = new Position(0);
+		final Position position = new Position(0);
 		
 		BnfRule firstRule = null;
 		BnfRule currentRule = null;
@@ -270,12 +271,12 @@ public class BnfGrammarParser {
 				throw new BnfGrammarException("BNF symbol expected!");
 			}
 			
-			StringBuffer buf = new StringBuffer();
+			final StringBuffer buf = new StringBuffer();
 			for (Character c = nextCharacter(bnfGrammarText, position); Character.isLetterOrDigit((c = bnfGrammarText.charAt(position.getPosition()))); position.increment()) {
 				buf.append(c);
 			}
 			
-			String symbol = buf.toString();
+			final String symbol = buf.toString();
 			
 			// then the assignment ':=' follows
 			if (nextCharacter(bnfGrammarText, position) != ':' && bnfGrammarText.charAt(position.getPosition() + 1) != '=') {
@@ -284,13 +285,13 @@ public class BnfGrammarParser {
 			position.add(2);
 			
 			// after the assignment ':=' the BNF rule follows
-			BnfElement firstElement = buildBnfRule(bnfGrammarText, position);
+			final BnfElement firstElement = buildBnfRule(bnfGrammarText, position);
 			
 			// the line ends with a semicolon ';'
 			if ((nextCharacter(bnfGrammarText, position)) != BnfConstants.RULE_TERMINATOR) {
 				
-				Position line = new Position(1);
-				Position linePosition = new Position(1);
+				final Position line = new Position(1);
+				final Position linePosition = new Position(1);
 				CharacterUtils.getLinePosition(bnfGrammarText, position.getPosition(), line, linePosition);
 				throw new BnfGrammarException(
 					StringUtils.join(new String[] {

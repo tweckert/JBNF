@@ -10,17 +10,16 @@ import java.io.Reader;
  */
 public class FileIO {
 
-	public static CharSequence readFile(String filename, String encoding) throws IOException {
-		
-		StringBuffer buf = new StringBuffer();
+	public static CharSequence readFile(final String filename, final String encoding) throws IOException {
+
+		final StringBuffer buf = new StringBuffer();
 		InputStreamReader reader = null;
 
 		try {
-			
-			buf = new StringBuffer();
+
 			reader = new InputStreamReader(FileIO.class.getResourceAsStream(filename), encoding);
 
-			BufferedReader br = new BufferedReader(reader);
+			final BufferedReader br = new BufferedReader(reader);
 			for (int c = br.read(); c != -1; c = br.read()) {
 				buf.append((char) c);
 			}
@@ -31,7 +30,7 @@ public class FileIO {
 		return buf;
 	}
 	
-	public static void closeQuietly(Reader reader) {
+	public static void closeQuietly(final Reader reader) {
 		
 		try {
 			if (reader != null) {
@@ -39,8 +38,6 @@ public class FileIO {
 			}
 		} catch (Throwable t) {
 			// intentionally left blank
-		} finally {
-			reader = null;
 		}
 	}
 
